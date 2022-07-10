@@ -1,9 +1,12 @@
-export const ImageGallery = () => {
+import { ImageItems } from 'components/ImageItems/ImageItems';
+import { List } from './ImageGallery.styled';
+
+export function ImageGallery({ imagesInfo }) {
   return (
-    <ul>
-      <li class="gallery-item">
-        <img src="" alt="" />
-      </li>
-    </ul>
+    <List>
+      {imagesInfo.map(({ id, tags, webformatURL }) => (
+        <ImageItems key={id} alt={tags} previewImage={webformatURL} />
+      ))}
+    </List>
   );
-};
+}

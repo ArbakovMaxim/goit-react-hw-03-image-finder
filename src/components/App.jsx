@@ -1,59 +1,49 @@
-import axios from 'axios';
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { Component } from 'react';
-
-axios.defaults.baseURL = 'https://pixabay.com/api/';
-const params = {
-  key: `27247276-2a88fcc64ac0c5c7b7477cb08`,
-  q: '',
-  image_type: 'photo',
-  orientation: 'horizontal',
-  safesearch: true,
-  perPage: 12,
-  page: 1,
-};
+import { ImageGallery } from './ImageGallery/ImageGallery';
+import { apiImage } from './services/api';
 
 export class App extends Component {
   state = {
     searchValue: '',
-    value: '',
+    page: 1,
+    value: [],
     status: 'idle',
   };
 
-  componentDidMount() {
-    if (this.state.value !== '') {
-      this.fff();
+  componentDidUpdate(_, prevState) {
+    if (prevState.searchValue !== this.state.searchValue) {
+      this.fetchGallery();
     }
   }
-
-  fff = async params => {
-    try {
-      const response = await axios.get({ params });
-      console.log(response);
-      if (response.data.hits.length === 0) {
-        return;
-      } else {
-        this.setState({
-          value: response,
-        });
-        return response;
-      }
-    } catch (error) {
-      alert('нехера');
-    }
-  };
 
   onSubmit = event => {
     this.setState({
       searchValue: event,
+      status: 'pedding',
     });
-    params.q = this.state.searchValue;
+  };
+
+  fetchGallery = () => {
+    const { searchValue, page } = this.state;
+
+    apiImage(searchValue, page)
+      .then(response => {
+        this.setState({
+          value: response,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   render() {
+    const { value } = this.state;
     return (
       <>
         <Searchbar onSubmit={this.onSubmit} />
+        <ImageGallery imagesInfo={value} />
       </>
     );
   }
