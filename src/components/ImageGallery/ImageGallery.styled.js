@@ -9,6 +9,8 @@ export const List = styled.ul`
   margin-bottom: 0;
   padding: 0;
   list-style: none;
+  margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 20px;
 `;

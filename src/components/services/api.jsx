@@ -15,5 +15,5 @@ export async function apiImage(searchValue, page) {
       per_page: 12,
     },
   });
-  return response.data;
+  return response.data.hits;
 }

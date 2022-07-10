@@ -2,6 +2,7 @@ import { Searchbar } from 'components/Searchbar/Searchbar';
 import { Component } from 'react';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { apiImage } from './services/api';
+import Modal from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -9,6 +10,9 @@ export class App extends Component {
     page: 1,
     value: [],
     status: 'idle',
+    error: '',
+    showModal: false,
+    modalImage: null,
   };
 
   componentDidUpdate(_, prevState) {
@@ -24,6 +28,13 @@ export class App extends Component {
     });
   };
 
+  toggleModal = largeImageURL => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+      modalImage: largeImageURL,
+    }));
+  };
+
   fetchGallery = () => {
     const { searchValue, page } = this.state;
 
@@ -32,18 +43,28 @@ export class App extends Component {
         this.setState({
           value: response,
         });
+        if (response.hits.length === 0) {
+          this.setState({
+            error: 'По вашему запросу не чего не найдено!',
+          });
+        }
       })
       .catch(error => {
-        console.log(error);
+        this.setState({
+          error: error.message,
+        });
       });
   };
 
   render() {
-    const { value } = this.state;
+    const { value, showModal, modalImage } = this.state;
     return (
       <>
         <Searchbar onSubmit={this.onSubmit} />
-        <ImageGallery imagesInfo={value} />
+        <ImageGallery imagesInfo={value} toggleModal={this.toggleModal} />
+        {showModal && (
+          <Modal image={modalImage} closeModal={this.toggleModal} />
+        )}
       </>
     );
   }
