@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { apiImage } from './services/api';
 import Modal from './Modal/Modal';
+import { Spiner } from './Spiner/Spiner';
 
 export class App extends Component {
   state = {
@@ -24,6 +25,7 @@ export class App extends Component {
   onSubmit = event => {
     this.setState({
       searchValue: event,
+      page: 1,
       status: 'pedding',
     });
   };
@@ -35,6 +37,12 @@ export class App extends Component {
     }));
   };
 
+  spiner = () => {
+    this.setState({
+      status: 'idle',
+    });
+  };
+
   fetchGallery = () => {
     const { searchValue, page } = this.state;
 
@@ -42,8 +50,10 @@ export class App extends Component {
       .then(response => {
         this.setState({
           value: response,
+          status: 'idle',
+          error: '',
         });
-        if (response.hits.length === 0) {
+        if (response.length === 0) {
           this.setState({
             error: 'По вашему запросу не чего не найдено!',
           });
@@ -56,12 +66,26 @@ export class App extends Component {
       });
   };
 
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+
   render() {
-    const { value, showModal, modalImage } = this.state;
+    const { value, showModal, modalImage, status, error } = this.state;
     return (
       <>
         <Searchbar onSubmit={this.onSubmit} />
-        <ImageGallery imagesInfo={value} toggleModal={this.toggleModal} />
+        {status === 'pedding' && <Spiner />}
+        {error !== '' && <p> {error}</p>}
+        {value.length !== 0 && (
+          <ImageGallery
+            loadMore={this.loadMore}
+            imagesInfo={value}
+            toggleModal={this.toggleModal}
+          />
+        )}
         {showModal && (
           <Modal image={modalImage} closeModal={this.toggleModal} />
         )}

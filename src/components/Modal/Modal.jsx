@@ -1,3 +1,4 @@
+import { Spiner } from 'components/Spiner/Spiner';
 import { Component } from 'react';
 import { createPortal } from 'react-dom';
 import { Overlay, ModalImage } from './Modal.styled';
@@ -5,8 +6,11 @@ import { Overlay, ModalImage } from './Modal.styled';
 const rootModal = document.querySelector('#root-modal');
 
 export default class Modal extends Component {
+  state = { status: 'idle' };
+
   componentDidMount() {
     window.addEventListener('keydown', this.handleEscape);
+    this.openSniper();
   }
 
   componentWillUnmount() {
@@ -24,12 +28,28 @@ export default class Modal extends Component {
       this.props.closeModal();
     }
   };
+  closeSniper = () => {
+    this.setState({
+      status: 'idle',
+    });
+  };
+
+  openSniper = () => {
+    this.setState({
+      status: 'pedding',
+    });
+  };
 
   render() {
     const { image } = this.props;
     return createPortal(
       <Overlay onClick={this.handleBackdrop}>
-        <ModalImage src={image} alt="велике зображення" />
+        {this.state.status === 'pedding' && <Spiner />}
+        <ModalImage
+          onLoad={this.closeSniper}
+          src={image}
+          alt="велике зображення"
+        />
       </Overlay>,
       rootModal
     );
