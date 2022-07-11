@@ -21,15 +21,28 @@ export class App extends Component {
       prevState.searchValue !== this.state.searchValue ||
       prevState.page !== this.state.page
     ) {
+      this.setState({
+        status: 'pending',
+      });
+      if (this.state.page === 1) {
+        this.setState({ value: [] });
+      }
       this.fetchGallery();
     }
   }
 
   onSubmit = event => {
+    if (event.trim() !== '') {
+      this.setState({
+        searchValue: event,
+        page: 1,
+        status: 'pending',
+      });
+    }
     this.setState({
-      searchValue: event,
-      page: 1,
-      status: 'pedding',
+      error: 'В ведите запрос',
+      value: [],
+      status: 'rejected',
     });
   };
 
@@ -42,7 +55,7 @@ export class App extends Component {
 
   spiner = () => {
     this.setState({
-      status: 'idle',
+      status: 'rejected',
     });
   };
 
@@ -53,7 +66,7 @@ export class App extends Component {
       .then(response => {
         this.setState(prevState => ({
           value: [...prevState.value, ...response],
-          status: 'idle',
+          status: 'rejected',
           error: '',
         }));
         if (response.length === 0) {
@@ -65,6 +78,7 @@ export class App extends Component {
       .catch(error => {
         this.setState({
           error: error.message,
+          status: 'rejected',
         });
       });
   };
@@ -80,7 +94,7 @@ export class App extends Component {
     return (
       <>
         <Searchbar onSubmit={this.onSubmit} />
-        {status === 'pedding' && <Spiner />}
+        {status === 'pending' && <Spiner />}
         {error !== '' && <p> {error}</p>}
         {value.length !== 0 && (
           <ImageGallery

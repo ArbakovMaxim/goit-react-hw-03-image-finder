@@ -17,7 +17,9 @@ export function ImageGallery({ imagesInfo, toggleModal, loadMore }) {
         ))}
       </List>
       <BtnWrapper>
-        <BtnLoadMore onClick={loadMore}>load more</BtnLoadMore>
+        <BtnLoadMore type="button" onClick={loadMore}>
+          load more
+        </BtnLoadMore>
       </BtnWrapper>
     </>
   );
