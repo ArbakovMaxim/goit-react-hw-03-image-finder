@@ -1,5 +1,5 @@
 import { ImageItems } from 'components/ImageItems/ImageItems';
-import { BtnLoadMore, BtnWrapper, List } from './ImageGallery.styled';
+import { BtnWrapper, BtnLoadMore, List } from './ImageGallery.styled';
 
 export function ImageGallery({ imagesInfo, toggleModal, loadMore }) {
   return (

@@ -14,7 +14,6 @@ export const List = styled.ul`
   margin-right: auto;
   margin-bottom: 20px;
 `;
-
 export const BtnLoadMore = styled.button`
   margin-left: auto;
   margin-right: auto;

@@ -17,7 +17,10 @@ export class App extends Component {
   };
 
   componentDidUpdate(_, prevState) {
-    if (prevState.searchValue !== this.state.searchValue) {
+    if (
+      prevState.searchValue !== this.state.searchValue ||
+      prevState.page !== this.state.page
+    ) {
       this.fetchGallery();
     }
   }
@@ -48,11 +51,11 @@ export class App extends Component {
 
     apiImage(searchValue, page)
       .then(response => {
-        this.setState({
-          value: response,
+        this.setState(prevState => ({
+          value: [...prevState.value, ...response],
           status: 'idle',
           error: '',
-        });
+        }));
         if (response.length === 0) {
           this.setState({
             error: 'По вашему запросу не чего не найдено!',
