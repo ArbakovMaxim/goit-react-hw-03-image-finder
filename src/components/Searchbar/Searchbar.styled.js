@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { AiOutlineMonitor } from 'react-icons/ai';
-import { Form, Field } from 'formik';
+import { Form, Field, ErrorMessage } from 'formik';
 
 export const Header = styled.header`
   top: 0;
@@ -75,4 +75,16 @@ export const InputForm = styled(Field)`
 export const ImgForm = styled(AiOutlineMonitor)`
   width: 30px;
   height: 30px;
+`;
+
+export const Error = styled(ErrorMessage)`
+  color: red;
+  font-size: 12px;
+  width: 180px;
+`;
+
+export const ErrorStatus = styled.p`
+  color: red;
+  font-size: 12px;
+  width: 180px;
 `;

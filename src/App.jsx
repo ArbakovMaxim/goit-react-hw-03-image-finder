@@ -1,15 +1,15 @@
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { Component } from 'react';
-import { ImageGallery } from './ImageGallery/ImageGallery';
+import { ImageGallery } from './components/ImageGallery/ImageGallery';
 import { apiImage } from './services/api';
-import Modal from './Modal/Modal';
-import { Spiner } from './Spiner/Spiner';
+import Modal from './components/Modal/Modal';
+import { Spiner } from './components/Spiner/Spiner';
 
 export class App extends Component {
   state = {
     searchValue: '',
     page: 1,
-    value: [],
+    images: [],
     status: 'idle',
     error: '',
     showModal: false,
@@ -25,7 +25,7 @@ export class App extends Component {
         status: 'pending',
       });
       if (this.state.page === 1) {
-        this.setState({ value: [] });
+        this.setState({ images: [] });
       }
       this.fetchGallery();
     }
@@ -41,7 +41,7 @@ export class App extends Component {
     }
     this.setState({
       error: 'В ведите запрос',
-      value: [],
+      images: [],
       status: 'rejected',
     });
   };
@@ -65,7 +65,7 @@ export class App extends Component {
     apiImage(searchValue, page)
       .then(response => {
         this.setState(prevState => ({
-          value: [...prevState.value, ...response],
+          images: [...prevState.images, ...response],
           status: 'rejected',
           error: '',
         }));
@@ -90,16 +90,16 @@ export class App extends Component {
   };
 
   render() {
-    const { value, showModal, modalImage, status, error } = this.state;
+    const { images, showModal, modalImage, status, error } = this.state;
     return (
       <>
-        <Searchbar onSubmit={this.onSubmit} />
+        <Searchbar onSubmit={this.onSubmit} errorStatus={error} />
         {status === 'pending' && <Spiner />}
-        {error !== '' && <p> {error}</p>}
-        {value.length !== 0 && (
+        {/* {error !== '' && <p> {error}</p>} */}
+        {images.length !== 0 && (
           <ImageGallery
             loadMore={this.loadMore}
-            imagesInfo={value}
+            imagesInfo={images}
             toggleModal={this.toggleModal}
           />
         )}

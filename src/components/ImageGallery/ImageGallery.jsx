@@ -1,4 +1,4 @@
-import { ImageItems } from 'components/ImageItems/ImageItems';
+import { ImageItems } from 'components/ImageGallery/ImageItems/ImageItems';
 import { BtnWrapper, BtnLoadMore, List } from './ImageGallery.styled';
 
 export function ImageGallery({ imagesInfo, toggleModal, loadMore }) {
